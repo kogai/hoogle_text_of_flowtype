@@ -1,0 +1,19 @@
+opam-version: "1.2"
+name: "hoogle_text_of_flowtype"
+version: "~0.0.1"
+maintainer: "shinichi kogai <kogai0121@gmail.com>"
+authors: "shinichi kogai <kogai0121@gmail.com>"
+homepage: "https://github.com/kogai/hoogle_text_of_flowtype"
+bug-reports: "https://github.com/kogai/hoogle_text_of_flowtype"
+license: "MIT"
+dev-repo: "git@github.com:kogai/hoogle_text_of_flowtype.git"
+build: [
+  [make]
+]
+install: [make "install"]
+remove: ["ocamlfind" "remove" "hoogle_text_of_flowtype"]
+depends: [
+  "ocamlfind" {build}
+  "ounit"
+  "sedlex"
+]
