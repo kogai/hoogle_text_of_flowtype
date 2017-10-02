@@ -1,0 +1,5 @@
+#!/bin/bash
+
+cd flow/src/parser
+make
+cd ../../../
