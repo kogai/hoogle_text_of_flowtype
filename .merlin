@@ -2,5 +2,5 @@ S src/**
 
 B _build/**
 
-PKG ounit core sedlex menhirlib
+PKG ounit core parser_flow 
 

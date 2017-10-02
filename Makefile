@@ -1,4 +1,4 @@
-OCB_FLAGS = -use-ocamlfind -use-menhir -I src -pkgs 'sedlex,ounit,core,menhirlib,ppx_deriving.show' -tags thread
+OCB_FLAGS = -use-ocamlfind -use-menhir -I src -pkgs 'ounit,core,ppx_deriving.show,flow_parser' -tags thread
 OCB = ocamlbuild $(OCB_FLAGS)
 
 build:native byte
@@ -29,7 +29,6 @@ install:
 		merlin \
 		core \
 		ocamlfind \
-		flow_parser \
 		ounit
 	opam user-setup install
 

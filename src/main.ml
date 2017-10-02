@@ -4,4 +4,5 @@ let rec fib = function
 | n -> fib (n - 2) + fib (n - 1)
 
 let () =
+  let result = Parser_flow.jsx_pragma_expression "declare function foo()" in
   print_int @@ fib 10
