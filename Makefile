@@ -2,7 +2,7 @@ OCB_FLAGS = -use-ocamlfind -use-menhir -I src -pkgs 'ounit,core,ppx_deriving.sho
 
 OCB = ocamlbuild $(OCB_FLAGS)
 
-build:native
+build:native flow_parser
 
 run:build
 	./main.native 

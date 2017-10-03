@@ -1,8 +1,4 @@
-(* open Core *)
 open Parser_flow
-(* open Parser *)
-(* open Flow_parser *)
-(* open Flow *)
 
 let rec fib = function
   | 0 -> 0
@@ -10,5 +6,16 @@ let rec fib = function
 | n -> fib (n - 2) + fib (n - 1)
 
 let () =
-  (* let result = Parser_flow.jsx_pragma_expression "declare function foo()" in *)
+  let filename = Some (File_key.SourceFile "my-file.js") in
+  let _ = try
+    Some (jsx_pragma_expression "declare function foo(): string" filename)
+  with
+  | Parse_error.Error [] ->
+    print_string "Empty";
+    None
+  | Parse_error.Error ((_, e)::_) ->
+    print_endline "Parse error!!!";
+    None
+  in
+      
   print_int @@ fib 10
