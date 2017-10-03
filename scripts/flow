@@ -1,0 +1,5 @@
+#!/bin/bash
+
+cd flow
+make build-flow-debug
+cd ../
