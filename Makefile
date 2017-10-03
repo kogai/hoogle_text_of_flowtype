@@ -1,7 +1,8 @@
-OCB_FLAGS = -use-ocamlfind -use-menhir -I src -I flow/src/parser -pkgs 'ounit,core,ppx_deriving.show,flow_parser' -tags thread
+OCB_FLAGS = -use-ocamlfind -use-menhir -I src -pkgs 'ounit,core,ppx_deriving.show,sedlex' -tags thread -cflags "-I /Users/kogaishinichi/hoogle_text_of_flowtype/flow/_build/src/parser" -lflags "-I /Users/kogaishinichi/hoogle_text_of_flowtype/flow/_build/src/parser parser_flow.cmxa"
+
 OCB = ocamlbuild $(OCB_FLAGS)
 
-build:flow_parser native byte
+build:native
 
 run:build
 	./main.native 
@@ -9,6 +10,11 @@ run:build
 # test:
 # 	$(OCB) main_test.native
 # 	./main_test.native
+
+lib:
+	$(OCB) flow/src/parser_flow.cma
+	$(OCB) flow/src/parser_flow.cmxa
+	$(OCB) flow/src/parser_flow.cmxs
 
 native:
 	$(OCB) main.native

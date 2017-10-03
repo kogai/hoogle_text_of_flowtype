@@ -3,6 +3,7 @@
 ```bash
 make init
 make install
+git submodule update -i
 
 make run
 ```

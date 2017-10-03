@@ -1,6 +1,8 @@
 S src/**
+S flow/src/parser/**
 
 B _build/**
+B flow/_build/**
 
-PKG ounit core parser_flow 
+PKG ounit core 
 
