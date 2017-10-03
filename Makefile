@@ -20,7 +20,7 @@ debug:build
 	$(OCB) -tag debug main.byte
 
 build_flow:
-	./scripts/flow
+	./scripts/flow_parser
 
 init:
 	opam init -ya --comp=4.03.0
