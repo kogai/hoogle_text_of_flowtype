@@ -38,6 +38,7 @@ install:
 	opam install -y \
 		merlin \
 		core \
+		yojson \
 		ocamlfind \
 		ounit
 	opam user-setup install
