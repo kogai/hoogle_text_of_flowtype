@@ -2,8 +2,8 @@ PKGS = ounit,core,ppx_deriving.show,sedlex,yojson
 CFLAGS = "-I $(abspath ./)/flow/_build/src/parser"
 LFLAGS = "-I $(abspath ./)/flow/_build/src/parser parser_flow.cmxa" 
 
-OCB_FLAGS = -use-ocamlfind -use-menhir -I src -pkgs $(PKGS) -cflags $(CFLAGS) -lflags $(LFLAGS) -verbose 4
-OCB = ocamlbuild $(OCB_FLAGS)
+OCB_FLAGS = -use-ocamlfind -use-menhir -I src -pkgs $(PKGS) -cflags $(CFLAGS) -lflags $(LFLAGS)
+OCB = ocamlbuild $(OCB_FLAGS) -verbose 0
 MODULES = $(wildcard $(abspath ./)/flow/_build/src/**/*.cmx)
 OBJECTS = $(patsubst %.ml,%.cmxa,$(MODULES))
 
