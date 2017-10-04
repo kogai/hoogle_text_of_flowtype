@@ -1,5 +1,7 @@
 #!/bin/bash
 
 cd flow
-make build-flow-debug
+# make build-flow-debug
+# make
+	# $(OCB) parser_flow.cma parser_flow.cmxa
 cd ../

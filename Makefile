@@ -1,9 +1,11 @@
-PKGS = ounit,core,ppx_deriving.show,sedlex
+PKGS = ounit,core,ppx_deriving.show,sedlex,yojson
 CFLAGS = "-I $(abspath ./)/flow/_build/src/parser"
 LFLAGS = "-I $(abspath ./)/flow/_build/src/parser parser_flow.cmxa" 
 
-OCB_FLAGS = -use-ocamlfind -use-menhir -I src -pkgs $(PKGS) -cflags $(CFLAGS) -lflags $(LFLAGS)
+OCB_FLAGS = -use-ocamlfind -use-menhir -I src -pkgs $(PKGS) -cflags $(CFLAGS) -lflags $(LFLAGS) -verbose 4
 OCB = ocamlbuild $(OCB_FLAGS)
+MODULES = $(wildcard $(abspath ./)/flow/_build/src/**/*.cmx)
+OBJECTS = $(patsubst %.ml,%.cmxa,$(MODULES))
 
 build:native build_flow
 
@@ -25,6 +27,7 @@ debug:build
 
 build_flow:
 	./scripts/flow_parser
+	# ./scripts/flow
 
 init:
 	opam init -ya --comp=4.03.0

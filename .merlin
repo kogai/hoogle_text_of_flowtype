@@ -2,7 +2,7 @@ S src/**
 S flow/src/parser/**
 
 B _build/**
-B flow/_build/**
+B flow/_build/parser/**
 
-PKG ounit core 
+PKG ounit core yojson
 
