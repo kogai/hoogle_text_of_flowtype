@@ -7,19 +7,19 @@ OCB = ocamlbuild $(OCB_FLAGS) -verbose 0
 MODULES = $(wildcard $(abspath ./)/flow/_build/src/**/*.cmx)
 OBJECTS = $(patsubst %.ml,%.cmxa,$(MODULES))
 
-build:native build_flow
+build:main.native build_flow
 
 run:build
 	./main.native 
 
-# test:
-# 	$(OCB) main_test.native
-# 	./main_test.native
+test:
+	$(OCB) main_test.native
+	./main_test.native
 
-native:
+main.native:
 	$(OCB) main.native
 
-byte:build_flow
+main.byte:build_flow
 	$(OCB) main.byte
 
 debug:build
