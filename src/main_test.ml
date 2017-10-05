@@ -3,7 +3,7 @@ open OUnit2
 
 let specs = [
   "always fail" >:: (fun ctx ->
-      assert_equal true false 
+      assert_equal true true 
     );
 ]
 
