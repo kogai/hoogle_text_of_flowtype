@@ -1,0 +1,26 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: ocaml/opam
+        environment:
+          TERM: xterm-256color
+    working_directory: hoogle_text_of_flowtype
+    steps:
+      - checkout
+      - restore_cache:
+          name: Restore opam cache
+          keys:
+            - opam-cache-{{ .Environment.COMMON_CACHE_KEY }}-{{ checksum "Makefile" }}
+      - run:
+          name: Prepare
+          command: |
+            make init
+            make install
+            git submodule update -i
+      - save_cache:
+          name: Save opam cache
+          paths:
+            - ~/.opam
+          key: opam-cache-{{ .Environment.COMMON_CACHE_KEY }}-{{ checksum "Makefile" }}
+      - run: make test
