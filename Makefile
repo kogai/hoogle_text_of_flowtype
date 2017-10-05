@@ -39,6 +39,7 @@ install:
 		merlin \
 		core \
 		yojson \
+		sedlex \
 		ocamlfind \
 		ounit
 

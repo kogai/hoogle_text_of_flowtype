@@ -11,7 +11,7 @@ jobs:
       - restore_cache:
           name: Restore opam cache
           keys:
-            - opam-cache-{{ .Environment.COMMON_CACHE_KEY }}-{{ checksum "Makefile" }}
+            - opam-cache--{{ checksum "Makefile" }}
       - run:
           name: Prepare
           command: |
