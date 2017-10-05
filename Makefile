@@ -3,7 +3,7 @@ CFLAGS = "-I $(abspath ./)/flow/_build/src/parser"
 LFLAGS = "-I $(abspath ./)/flow/_build/src/parser parser_flow.cmxa" 
 
 OCB_FLAGS = -use-ocamlfind -use-menhir -I src -pkgs $(PKGS) -cflags $(CFLAGS) -lflags $(LFLAGS)
-OCB = ocamlbuild $(OCB_FLAGS) -verbose 0
+OCB = ocamlbuild $(OCB_FLAGS)
 MODULES = $(wildcard $(abspath ./)/flow/_build/src/**/*.cmx)
 OBJECTS = $(patsubst %.ml,%.cmxa,$(MODULES))
 

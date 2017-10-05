@@ -5,7 +5,7 @@ jobs:
       - image: ocaml/opam
         environment:
           TERM: xterm-256color
-    working_directory: hoogle_text_of_flowtype
+    working_directory: ~/hoogle_text_of_flowtype
     steps:
       - checkout
       - restore_cache:
