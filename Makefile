@@ -41,7 +41,9 @@ install:
 		yojson \
 		ocamlfind \
 		ounit
-	opam user-setup install
+
+setup:
+	opam user-setup install -y
 
 clean:
 	$(OCB) -clean
