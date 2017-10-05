@@ -12,6 +12,6 @@ let specs = [
       let (result, _) = Translate.program ocaml_ast, errors in
       let actual = Yojson.pretty_to_string result in
       print_endline actual;
-      assert_equal actual "{}"
+      assert_equal actual ""
     );
 ]

@@ -36,11 +36,11 @@ init:
 install:
 	opam update
 	opam install -y \
+		ocamlfind \
 		merlin \
 		core \
 		yojson \
 		sedlex \
-		ocamlfind \
 		ounit
 
 setup:
