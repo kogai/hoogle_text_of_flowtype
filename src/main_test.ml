@@ -7,5 +7,5 @@ let specs = [
     );
 ]
 
-let suite = "suite" >::: specs @ Translate_test.specs
+let suite = "suite" >::: specs @ Translate_test.specs @ Utils_test.specs
 let () = run_test_tt_main suite

@@ -3,29 +3,10 @@ open Ast
 open Core
 open Yojson
 
-(* Perhaps don't need to use JSON *)
-type t = json
-
-let string x = `String x
-let bool x = `Bool x
-let obj props = `Assoc (Array.to_list props)
-let array arr = `List (Array.to_list arr)
-let number x = `Float x
-let null = `Null
-let regexp _loc _pattern _flags = `Null
-
-let join sep xs = 
-  let rec f = function
-    | [] -> ""
-    | y::[] -> y
-    | y::ys -> y ^ sep ^ f ys
-  in
-  f xs
-
 let tupple_str_of_list = function
   | [] -> ""
   | x::[] -> x
-  | xs -> "(" ^ join ", " xs ^ ")"
+  | xs -> "(" ^ Utils.join xs ", " ^ ")"
 
 let rec declarations (loc, statements, errors) =
   statements

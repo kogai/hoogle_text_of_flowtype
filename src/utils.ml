@@ -1,13 +1,15 @@
 open Core
 open Parser_flow
 
-(* val open_file: string -> (string * File_key.t option) *)
-let open_file filename =
-  let inx = In_channel.create filename in
-  (* let lexbuf = Lexing.from_channel inx in
-     lexbuf.lex_curr_p <- { lexbuf.lex_curr_p with pos_fname = filename };
-     parse_and_print lexbuf; *)
-  In_channel.close inx;
+let open_file filename = (
+  In_channel.read_all filename,
+  Some (File_key.SourceFile filename)
+)
 
-
-
+let join xs sep =
+  let rec f = function
+    | [] -> ""
+    | y::[] -> y
+    | y::ys -> y ^ sep ^ f ys
+  in
+  f xs
