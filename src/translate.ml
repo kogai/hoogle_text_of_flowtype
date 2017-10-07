@@ -14,11 +14,12 @@ let regexp _loc _pattern _flags = `Null
 
 let rec program (loc, statements, comments) =
   let body = List.map statement statements in
-  exit 1
+  "f ∷ String -> Int"
+
 and statement = Statement.(function
   | loc, DeclareFunction d ->
     exit 1
-  | _ -> exit 1
+  | _ -> None
 )
 
 let errors x = exit 1

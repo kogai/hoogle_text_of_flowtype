@@ -9,9 +9,8 @@ let specs = [
   "be able to parse function declaration" >:: (fun ctx ->
       let content = "declare function f(x: string): number;" in
       let (ocaml_ast, errors) = program_file content filename in
-      let (result, _) = Translate.program ocaml_ast, errors in
-      let actual = Yojson.pretty_to_string result in
+      let (actual, _) = Translate.program ocaml_ast, errors in
       print_endline actual;
-      assert_equal actual ""
+      assert_equal actual "f ∷ String -> Int"
     );
 ]

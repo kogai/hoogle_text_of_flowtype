@@ -23,4 +23,9 @@ jobs:
           paths:
             - ~/.opam
           key: opam-cache-{{ .Environment.COMMON_CACHE_KEY }}-{{ checksum "Makefile" }}
-      - run: make test
+      - run:
+          name: Show packages
+          command: |
+            opam config exec
+            ocamlfind list
+      # - run: make test
