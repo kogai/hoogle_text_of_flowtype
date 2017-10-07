@@ -39,21 +39,23 @@ and translate_type = Type.(function
       exit 1
   )
 and function_params = Function.Params.(function
-    (* TODO: Need to handle optional parameter *)
+    (* TODO: Consider aobut named type parameter include namespace like $npm$bigi$BigInteger *)
     | _, {
         Type.Function.Params.params;
         rest = Some (_, { Type.Function.RestParam.argument });
       } ->
-      let concrete = List.map params (fun (_, { Type.Function.Param.typeAnnotation }) ->
-          translate_type typeAnnotation) in
+      let concrete = List.map params function_param in
       let result = function_param argument in
       List.append concrete [result]
     | _, { Type.Function.Params.params; rest = None } ->
-      List.map params (fun (_, { Type.Function.Param.typeAnnotation }) ->
-          translate_type typeAnnotation)
+      List.map params function_param
   )
 and function_param = Type.Function.Param.(function
-    | _, { typeAnnotation } -> translate_type typeAnnotation
+    | _, { typeAnnotation; optional; name } ->
+      if optional then
+        "Maybe " ^ translate_type typeAnnotation
+      else
+        translate_type typeAnnotation
   )
 
 let errors x = exit 1

@@ -27,4 +27,9 @@ let specs = [
       let actual = get_result "fixture/translate_function_rest.js" in
       assert_equal actual "f ∷ (String, Float, [String]) -> IO ()"
     );
+  "be able to parse with optional parameters" >:: (fun ctx ->
+      let actual = get_result "fixture/optional.js" in
+      print_endline actual;
+      assert_equal actual "f ∷ Maybe String -> IO ()"
+    );
 ]
