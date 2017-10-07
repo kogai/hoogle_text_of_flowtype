@@ -5,9 +5,9 @@ open Parser_flow
 let open_file filename =
   let inx = In_channel.create filename in
   (* let lexbuf = Lexing.from_channel inx in
-  lexbuf.lex_curr_p <- { lexbuf.lex_curr_p with pos_fname = filename };
-  parse_and_print lexbuf; *)
+     lexbuf.lex_curr_p <- { lexbuf.lex_curr_p with pos_fname = filename };
+     parse_and_print lexbuf; *)
   In_channel.close inx;
-  
+
 
 

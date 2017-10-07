@@ -15,18 +15,17 @@ let null = `Null
 let regexp _loc _pattern _flags = `Null
 
 let rec declarations (loc, statements, errors) =
-  let body = List.map statements statement in
-  let body2 = List.fold body ~init: [] ~f: (fun acc x -> match (acc, x) with
-    | acc, Some x -> x :: acc 
-    | acc, None -> acc
-  ) in
-
-  body2
+  statements
+  |> (fun xs -> List.map xs statement)
+  |> (fun xs -> List.fold xs ~init: [] ~f: (fun acc x -> match (acc, x) with
+      | acc, Some x -> x :: acc 
+      | acc, None -> acc
+    ))
 
 and statement = Statement.(function
-  | loc, DeclareFunction d ->
-    Some "f ∷ String -> Int"
-  | _ -> None
-)
+    | loc, DeclareFunction d ->
+      Some "f ∷ String -> Int"
+    | _ -> None
+  )
 
 let errors x = exit 1

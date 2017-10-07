@@ -10,12 +10,12 @@ let () =
   let content = "const foo: string = \"my-string;\"" in
   let filename = Some (File_key.SourceFile "my-file.js") in
   let (ocaml_ast, errors) = program_file content filename in
-  
+
   let (result, _) =
     try
       let (translated_ast, errors) =
         let (ocaml_ast, errors) = program_file content filename in
-        Translate.program ocaml_ast, errors
+        Translate.declarations ocaml_ast, errors
       in
       (translated_ast, errors)
     with Parse_error.Error l ->
