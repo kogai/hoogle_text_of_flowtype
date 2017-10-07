@@ -29,6 +29,6 @@ jobs:
           name: Do test
           command: |
             eval $(opam config env)
-            # ocamlfind list
+            ocamlfind list
             ocamlfind query ounit
-            make test
+            # make test

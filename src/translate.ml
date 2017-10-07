@@ -31,6 +31,7 @@ and translate_type = Type.(function
       tupple_str_of_list parameters ^ " -> " ^ return_type
     | _, String -> "String"
     | _, Number -> "Float"
+    | _, Boolean -> "Bool"
     | _, x ->
       print_endline "WILDCARD REACHED";
       exit 1
