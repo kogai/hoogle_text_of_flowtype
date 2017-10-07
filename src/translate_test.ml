@@ -29,7 +29,11 @@ let specs = [
     );
   "be able to parse with optional parameters" >:: (fun ctx ->
       let actual = get_result "fixture/optional.js" in
-      print_endline actual;
       assert_equal actual "f ∷ Maybe String -> IO ()"
+    );
+  "be able to parse with type parameters" >:: (fun ctx ->
+      let actual = get_result "fixture/type_parameter.js" in
+      print_endline actual;
+      assert_equal actual "f ∷ t -> [t]"
     );
 ]

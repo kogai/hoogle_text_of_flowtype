@@ -24,7 +24,6 @@ and translate_statement = Statement.(function
     | _ -> None
   )
 and translate_type = Type.(function
-    (* TODO: Consider how to treat type parameter *)
     | _, Function ({ Function.params; returnType; typeParameters }) ->
       let parameters = function_params params in
       let return_type = translate_type returnType in
@@ -34,6 +33,7 @@ and translate_type = Type.(function
     | _, Boolean -> "Bool"
     | _, Array x -> "[" ^ translate_type x ^ "]"
     | _, Void -> "IO ()"
+    | _, Generic { Type.Generic.id; typeParameters = None } -> generic id
     | _, x ->
       print_endline "WILDCARD REACHED";
       exit 1
@@ -56,6 +56,12 @@ and function_param = Type.Function.Param.(function
         "Maybe " ^ translate_type typeAnnotation
       else
         translate_type typeAnnotation
+  )
+and generic = Type.Generic.(function
+    | Identifier.Unqualified (_, x) -> String.lowercase x
+    | Identifier.Qualified x ->
+      print_endline @@ "Qualified ";
+      exit 1
   )
 
 let errors x = exit 1
