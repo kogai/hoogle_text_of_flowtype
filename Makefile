@@ -40,6 +40,7 @@ install:
 		merlin \
 		core \
 		yojson \
+		ppx_deriving \
 		sedlex \
 		ounit
 

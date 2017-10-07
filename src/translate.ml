@@ -23,8 +23,11 @@ let rec declarations (loc, statements, errors) =
     ))
 
 and statement = Statement.(function
-    | loc, DeclareFunction d ->
-      Some "f ∷ String -> Int"
+    | loc, DeclareFunction ({ id }) ->
+      let (_, identifier) = id in
+      print_endline @@ "[IDENT]" ^ identifier;
+
+      Some (identifier ^ " ∷ String -> Int")
     | _ -> None
   )
 
