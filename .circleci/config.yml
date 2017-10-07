@@ -28,6 +28,6 @@ jobs:
       - run:
           name: Do test
           command: |
-            eval `opam config env`
+            eval $(opam config env)
             ocamlfind list
             make test

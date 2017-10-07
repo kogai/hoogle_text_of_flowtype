@@ -3,7 +3,7 @@ open Ast
 open Core
 open Yojson
 
-(* Perhaps no need to use JSON *)
+(* Perhaps don't need to use JSON *)
 type t = json
 
 let string x = `String x
@@ -14,47 +14,53 @@ let number x = `Float x
 let null = `Null
 let regexp _loc _pattern _flags = `Null
 
+let join sep xs = 
+  let rec f = function
+    | [] -> ""
+    | y::[] -> y
+    | y::ys -> y ^ sep ^ f ys
+  in
+  f xs
+
+let tupple_str_of_list = function
+  | [] -> ""
+  | x::[] -> x
+  | xs -> "(" ^ join ", " xs ^ ")"
+
 let rec declarations (loc, statements, errors) =
   statements
-  |> (fun xs -> List.map xs statement)
+  |> (fun xs -> List.map xs translate_statement)
   |> (fun xs -> List.fold xs ~init: [] ~f: (fun acc x -> match (acc, x) with
       | acc, Some x -> x :: acc 
       | acc, None -> acc
     ))
 
-and statement = Statement.(function
-    | loc, DeclareFunction ({ id; typeAnnotation }) ->
+and translate_statement = Statement.(function
+    | _, DeclareFunction ({ DeclareFunction.id; typeAnnotation }) ->
       let (_, identifier) = id in
-      let (_, xxx) = typeAnnotation in
-      params xxx;
-      (* let result = match typeAnnotation with
-         | Ast.Type.Function.(
-
-          )
-         in *)
-      (* let argument_def = match typeAnnotation with 
-         | (_,  x) ->
-          (* print_endline @@ "[NAME] " ^ x.name; *)
-          exit 1
-         (* () *)
-         | _ -> exit 1
-         in *)
-      (* and predicate (loc, p) = Ast.Type.Predicate.(
-         let _type, value = match p with
-          | Declared e -> "DeclaredPredicate", [|"value", expression e|]
-          | Inferred -> "InferredPredicate", [||]
-         in
-         node _type loc value
-         ) *)
-
-      print_endline @@ "[IDENT] " ^ identifier;
-
-      Some (identifier ^ " ∷ String -> Int")
+      let (_, function_declaration) = typeAnnotation in
+      Some (identifier ^ " ∷ " ^ translate_type function_declaration)
     | _ -> None
   )
-and params = Type.(function
-    | _, Function x -> print_endline "IT IS FUNCTION"; exit 1
+and translate_type = Type.(function
+    | _, Function ({ Function.params; returnType; typeParameters }) ->
+      (* params: 'M Params.t;
+         returnType: 'M Type.t;
+         typeParamet *)
+      let parameters = function_params params in
+      tupple_str_of_list parameters ^ " -> Int"
+    | _, StringLiteral x ->
+      print_endline "THIS IS STRING LITERAL"; exit 1
     | _ -> print_endline "IS NOT FUNCTION"; exit 1
+  )
+and function_params = Function.Params.(function
+    (* | _, { params; rest = Some (rest_loc, { Ast.Type.Function.RestElement.argument }) } -> *)
+    (* TODO: Need to handle optional parameter *)
+    | _, { Type.Function.Params.params; } ->
+      List.map params (fun (_, { Type.Function.Param.typeAnnotation }) ->
+          translate_type typeAnnotation)
+    | _, { Type.Function.Params.params; rest = None } ->
+      exit 1
   )
 
 (* let convert cx tparams_map loc func =

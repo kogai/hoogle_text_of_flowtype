@@ -27,7 +27,6 @@ debug:build
 
 build_flow:
 	./scripts/flow_parser
-	# ./scripts/flow
 
 init:
 	opam init -ya --comp=4.03.0
@@ -39,7 +38,6 @@ install:
 		ocamlfind \
 		merlin \
 		core \
-		ounit \
 		yojson \
 		ppx_deriving \
 		sedlex \
@@ -50,3 +48,4 @@ setup:
 
 clean:
 	$(OCB) -clean
+	./scripts/flow_parser_clean
