@@ -23,12 +23,51 @@ let rec declarations (loc, statements, errors) =
     ))
 
 and statement = Statement.(function
-    | loc, DeclareFunction ({ id }) ->
+    | loc, DeclareFunction ({ id; typeAnnotation }) ->
       let (_, identifier) = id in
-      print_endline @@ "[IDENT]" ^ identifier;
+      let (_, xxx) = typeAnnotation in
+      params xxx;
+      (* let result = match typeAnnotation with
+         | Ast.Type.Function.(
+
+          )
+         in *)
+      (* let argument_def = match typeAnnotation with 
+         | (_,  x) ->
+          (* print_endline @@ "[NAME] " ^ x.name; *)
+          exit 1
+         (* () *)
+         | _ -> exit 1
+         in *)
+      (* and predicate (loc, p) = Ast.Type.Predicate.(
+         let _type, value = match p with
+          | Declared e -> "DeclaredPredicate", [|"value", expression e|]
+          | Inferred -> "InferredPredicate", [||]
+         in
+         node _type loc value
+         ) *)
+
+      print_endline @@ "[IDENT] " ^ identifier;
 
       Some (identifier ^ " ∷ String -> Int")
     | _ -> None
   )
+and params = Type.(function
+    | _, Function x -> print_endline "IT IS FUNCTION"; exit 1
+    | _ -> print_endline "IS NOT FUNCTION"; exit 1
+  )
+
+(* let convert cx tparams_map loc func =
+   let {Ast.Type.Function.typeParameters; returnType; _} = func in
+   let reason = mk_reason RFunctionType loc in
+   let kind = Ordinary in
+   let tparams, tparams_map =
+    Anno.mk_type_param_declarations cx ~tparams_map typeParameters
+   in
+   let params = Func_params.convert cx tparams_map func in
+   let body = empty_body in
+   let return_t = Anno.convert cx tparams_map returnType in
+
+   {reason; kind; tparams; tparams_map; params; body; return_t} *)
 
 let errors x = exit 1

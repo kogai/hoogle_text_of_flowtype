@@ -39,6 +39,7 @@ install:
 		ocamlfind \
 		merlin \
 		core \
+		ounit \
 		yojson \
 		ppx_deriving \
 		sedlex \
