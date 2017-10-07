@@ -15,6 +15,6 @@ let specs = [
       let (ocaml_ast, errors) = program_file content filename in
       let (xs, _) = Translate.declarations ocaml_ast, errors in
       let actual = Option.value_exn (List.hd xs) in
-      assert_equal actual "f ∷ String -> Int"
+      assert_equal actual "f ∷ String -> Float"
     );
 ]

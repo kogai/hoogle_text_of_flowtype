@@ -43,37 +43,30 @@ and translate_statement = Statement.(function
     | _ -> None
   )
 and translate_type = Type.(function
+    (* TODO: Consider how to treat type parameter *)
     | _, Function ({ Function.params; returnType; typeParameters }) ->
-      (* params: 'M Params.t;
-         returnType: 'M Type.t;
-         typeParamet *)
       let parameters = function_params params in
-      tupple_str_of_list parameters ^ " -> Int"
-    | _, StringLiteral x ->
-      print_endline "THIS IS STRING LITERAL"; exit 1
-    | _ -> print_endline "IS NOT FUNCTION"; exit 1
+      let return_type = translate_type returnType in
+      tupple_str_of_list parameters ^ " -> " ^ return_type
+    | _, String -> "String"
+    | _, Number -> "Float"
+    | _, x ->
+      print_endline "WILDCARD REACHED";
+      exit 1
   )
 and function_params = Function.Params.(function
     (* | _, { params; rest = Some (rest_loc, { Ast.Type.Function.RestElement.argument }) } -> *)
     (* TODO: Need to handle optional parameter *)
-    | _, { Type.Function.Params.params; } ->
+    | _, {
+        Type.Function.Params.params;
+        rest = Some (_, { Type.Function.RestParam.argument });
+      } ->
+      print_endline "Some rest params";
       List.map params (fun (_, { Type.Function.Param.typeAnnotation }) ->
           translate_type typeAnnotation)
     | _, { Type.Function.Params.params; rest = None } ->
-      exit 1
+      List.map params (fun (_, { Type.Function.Param.typeAnnotation }) ->
+          translate_type typeAnnotation)
   )
-
-(* let convert cx tparams_map loc func =
-   let {Ast.Type.Function.typeParameters; returnType; _} = func in
-   let reason = mk_reason RFunctionType loc in
-   let kind = Ordinary in
-   let tparams, tparams_map =
-    Anno.mk_type_param_declarations cx ~tparams_map typeParameters
-   in
-   let params = Func_params.convert cx tparams_map func in
-   let body = empty_body in
-   let return_t = Anno.convert cx tparams_map returnType in
-
-   {reason; kind; tparams; tparams_map; params; body; return_t} *)
 
 let errors x = exit 1
