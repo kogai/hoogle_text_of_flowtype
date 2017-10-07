@@ -26,6 +26,8 @@ jobs:
       - run:
           name: Show packages
           command: |
-            opam config exec
+            ls -l ~/.opam/packages/ | grep sedlex
+            # opam config exec ocamlfind list
+            eval `opam config env`
             ocamlfind list
       # - run: make test
