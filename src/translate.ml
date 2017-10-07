@@ -32,23 +32,28 @@ and translate_type = Type.(function
     | _, String -> "String"
     | _, Number -> "Float"
     | _, Boolean -> "Bool"
+    | _, Array x -> "[" ^ translate_type x ^ "]"
+    | _, Void -> "IO ()"
     | _, x ->
       print_endline "WILDCARD REACHED";
       exit 1
   )
 and function_params = Function.Params.(function
-    (* | _, { params; rest = Some (rest_loc, { Ast.Type.Function.RestElement.argument }) } -> *)
     (* TODO: Need to handle optional parameter *)
     | _, {
         Type.Function.Params.params;
         rest = Some (_, { Type.Function.RestParam.argument });
       } ->
-      print_endline "Some rest params";
-      List.map params (fun (_, { Type.Function.Param.typeAnnotation }) ->
-          translate_type typeAnnotation)
+      let concrete = List.map params (fun (_, { Type.Function.Param.typeAnnotation }) ->
+          translate_type typeAnnotation) in
+      let result = function_param argument in
+      List.append concrete [result]
     | _, { Type.Function.Params.params; rest = None } ->
       List.map params (fun (_, { Type.Function.Param.typeAnnotation }) ->
           translate_type typeAnnotation)
+  )
+and function_param = Type.Function.Param.(function
+    | _, { typeAnnotation } -> translate_type typeAnnotation
   )
 
 let errors x = exit 1

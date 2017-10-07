@@ -9,5 +9,5 @@ RUN make init && \
 
 RUN eval $(opam config env) && \
   ocamlfind list && \
-  ls -l ~/.opam
+  ls -l ~/.opam/packages
 # ocamlfind query ounit
