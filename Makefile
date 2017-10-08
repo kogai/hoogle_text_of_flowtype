@@ -7,7 +7,7 @@ OCB = ocamlbuild $(OCB_FLAGS)
 MODULES = $(wildcard $(abspath ./)/flow/_build/src/**/*.cmx)
 OBJECTS = $(patsubst %.ml,%.cmxa,$(MODULES))
 
-build:main.native build_flow
+build:build_flow main.native
 
 run:build
 	./main.native 

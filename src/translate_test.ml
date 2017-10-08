@@ -10,30 +10,29 @@ let get_result filename =
   |> (fun (ocaml_ast, errors) -> Translate.declarations ocaml_ast, errors)
   |> (fun (xs, _) -> Option.value_exn (List.hd xs))
 
+let translate_specs = List.map [
+    ("fixture/translate_function_actual.js", "f ∷ String -> Float");
+    ("fixture/translate_multiple_parameters.js", "f ∷ (String, Float) -> Bool");
+    ("fixture/translate_function_rest.js", "f ∷ (String, Float, [String]) -> IO ()");
+    ("fixture/optional.js", "f ∷ Maybe String -> IO ()");
+    ("fixture/generics.js", "f ∷ t -> [t]");
+    ("fixture/type_alias.js", "f ∷ AType -> BType");
+    (* 
+    Remained specs
+    * bounded
+    * curried
+    *)
+  ] (fun (filepath, expect) ->
+    filepath >:: (fun ctx ->
+        let actual = get_result filepath in
+        (* print_endline actual; *)
+        assert_equal actual expect
+      );
+  )
+
 let specs = [
   "be able to derive tupple from list" >:: (fun ctx ->
       let actual = Translate.tupple_str_of_list ["string";"number";] in
       assert_equal actual "(string, number)"
-    );
-  "be able to parse function declaration" >:: (fun ctx ->
-      let actual = get_result "fixture/translate_function_actual.js" in
-      assert_equal actual "f ∷ String -> Float"
-    );
-  "be able to parse with multiple parameters" >:: (fun ctx ->
-      let actual = get_result "fixture/translate_multiple_parameters.js" in
-      assert_equal actual "f ∷ (String, Float) -> Bool"
-    );
-  "be able to parse with rest parameters" >:: (fun ctx ->
-      let actual = get_result "fixture/translate_function_rest.js" in
-      assert_equal actual "f ∷ (String, Float, [String]) -> IO ()"
-    );
-  "be able to parse with optional parameters" >:: (fun ctx ->
-      let actual = get_result "fixture/optional.js" in
-      assert_equal actual "f ∷ Maybe String -> IO ()"
-    );
-  "be able to parse with type parameters" >:: (fun ctx ->
-      let actual = get_result "fixture/type_parameter.js" in
-      print_endline actual;
-      assert_equal actual "f ∷ t -> [t]"
     );
 ]
