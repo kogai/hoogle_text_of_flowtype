@@ -6,7 +6,7 @@ let open_file filename = (
   Some (File_key.SourceFile filename)
 )
 
-let join xs sep =
+let join xs ~sep =
   let rec f = function
     | [] -> ""
     | y::[] -> y

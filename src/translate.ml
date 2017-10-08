@@ -11,23 +11,23 @@ let tupple_str_of_list = function
 let type_of_type_var base =
   let ty = ref '`' in (* Former of a'' *)
   base
-  |> (fun x -> String.split x ' ')
-  |> (fun xs -> List.map xs (function
+  |> String.split ~on:' '
+  |> List.map ~f:(function
       | "*" ->
         let next = Utils.succ !ty in
         ty := next;
         Char.to_string next
       | x -> x
-    ))
-  |> (fun xs -> Utils.join xs " ")
+    )
+  |> Utils.join ~sep:" "
 
 let rec declarations (loc, statements, errors) =
   statements
-  |> (fun xs -> List.map xs translate_statement)
-  |> (fun xs -> List.fold xs ~init: [] ~f: (fun acc x -> match (acc, x) with
+  |> List.map ~f:translate_statement
+  |> List.fold ~init: [] ~f: (fun acc x -> match (acc, x) with
       | acc, Some x -> x :: acc 
       | acc, None -> acc
-    ))
+    )
 
 and translate_statement = Statement.(function
     | _, DeclareFunction ({ DeclareFunction.id; typeAnnotation; }) ->
@@ -42,18 +42,18 @@ and gather_generic_names {Type.ParameterDeclaration.params} =
 
 and gather_bounds {Type.ParameterDeclaration.params} = 
   params
-  |> (fun ps -> List.filter ps (fun (_, { Type.ParameterDeclaration.TypeParam.bound }) ->
+  |> List.filter ~f:(fun (_, { Type.ParameterDeclaration.TypeParam.bound }) ->
       Option.is_some bound
-    ))
-  |> (fun ps -> List.map ps (fun (_, { Type.ParameterDeclaration.TypeParam.name; bound }) ->
+    )
+  |> List.map ~f:(fun (_, { Type.ParameterDeclaration.TypeParam.name; bound }) ->
       match bound with
       | Some b -> (b, name)
       | _ -> Utils.unreachable ~message:"Unreachable bounded parameter"
-    ))
-  |> (fun ps -> List.map ps (fun ((_, b), name) ->
+    )
+  |> List.map ~f:(fun ((_, b), name) ->
       let bound = translate_type b in
       bound ^ " " ^ String.lowercase name ^ " => "
-    ))
+    )
   |> tupple_str_of_list
 
 and translate_type ?(generic_names=[]) = Type.(function
@@ -70,9 +70,14 @@ and translate_type ?(generic_names=[]) = Type.(function
       let return_type = translate_type returnType in
       tupple_str_of_list parameters ^ " -> " ^ return_type
 
-    | _, String -> "String"
-    | _, Number -> "Float"
-    | _, Boolean -> "Bool"
+    | _, Union (t0, t1, ts) -> translate_types "Union " (t0::t1::ts)
+    | _, Intersection (t0, t1, ts) -> translate_types "Intersection " (t0::t1::ts)
+    | _, Tuple ts -> ts
+                     |> List.map ~f:translate_type
+                     |> tupple_str_of_list 
+    | _, String | _, StringLiteral _ -> "String"
+    | _, Number | _, NumberLiteral _ -> "Float"
+    | _, Boolean | _, BooleanLiteral _ -> "Bool"
     | _, Object x -> "Object"
     | _, Array x -> "[" ^ translate_type ~generic_names x ^ "]"
     | _, Void -> "IO ()"
@@ -85,6 +90,12 @@ and translate_type ?(generic_names=[]) = Type.(function
     | _, Nullable x -> "Maybe " ^ translate_type x
     | _, x -> Utils.unreachable ~message:"WILDCARD REACHED"
   )
+
+and translate_types kind ts =
+  kind ^ (ts
+          |> List.map ~f:translate_type
+          |> Utils.join ~sep:" ")
+
 and function_params ?(generic_names=[]) = Function.Params.(function
     (* TODO: Consider aobut named type parameter include namespace like $npm$bigi$BigInteger *)
     | _, {
@@ -108,7 +119,7 @@ and generic ~generic_names = Type.Generic.Identifier.(function
     | Unqualified (_, x) ->
       let is_generic =
         generic_names
-        |> (fun ns -> List.find ns (fun n -> n = x))
+        |> List.find ~f:(fun n -> n = x)
         |> Option.is_some
       in
       if is_generic then
