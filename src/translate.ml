@@ -30,11 +30,13 @@ let rec declarations (loc, statements, errors) =
     )
 
 and translate_statement = Statement.(function
-    | _, DeclareFunction ({ DeclareFunction.id; typeAnnotation; }) ->
-      let (_, identifier) = id in
-      let (_, function_declaration) = typeAnnotation in
-      let result = identifier ^ " ∷ " ^ translate_type function_declaration in
-      Some (type_of_type_var result)
+    | _, DeclareFunction ({
+        DeclareFunction.id=(_, id);
+        typeAnnotation=(_, body);
+      }) ->
+      id ^ " ∷ " ^ translate_type body
+      |> type_of_type_var
+      |> Option.return
     | _ -> None
   )
 and gather_generic_names {Type.ParameterDeclaration.params} = 
@@ -78,7 +80,7 @@ and translate_type ?(generic_names=[]) = Type.(function
     | _, String | _, StringLiteral _ -> "String"
     | _, Number | _, NumberLiteral _ -> "Float"
     | _, Boolean | _, BooleanLiteral _ -> "Bool"
-    | _, Object _ -> "Object"
+    | _, Object _ -> "{}"
     | _, Array t -> "[" ^ translate_type ~generic_names t ^ "]"
     | _, Void -> "IO ()"
     | _, Null -> "()"
