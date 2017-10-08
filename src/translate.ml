@@ -83,9 +83,5 @@ and generic ~generic_names = Type.Generic.Identifier.(function
       print_endline @@ "Qualified ";
       exit 1
   )
-(* and correct_generic_names = Type.ParameterDeclaration.(function
-    (* | ParameterDeclaration { params } -> [] *)
-    | x -> []
-   ) *)
 
 let errors x = exit 1
