@@ -14,6 +14,7 @@ let join xs sep =
   in
   f xs
 
-let unreachable () =
-  print_endline "Unreachable path had reached.";
+let unreachable ?(message="") =
+  print_endline "Unreachable path had reached";
+  print_endline message;
   exit 1

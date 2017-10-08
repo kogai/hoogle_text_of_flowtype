@@ -26,7 +26,7 @@ let translate_specs = List.map [
   ] (fun (filepath, expect) ->
     filepath >:: (fun ctx ->
         let actual = get_result filepath in
-        (* print_endline actual; *)
+        print_endline actual;
         assert_equal actual expect
       );
   )

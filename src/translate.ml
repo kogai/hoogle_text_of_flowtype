@@ -62,9 +62,7 @@ and translate_type ?(generic_names=[]) = Type.(function
     | _, Array x -> "[" ^ translate_type ~generic_names x ^ "]"
     | _, Void -> "IO ()"
     | _, Generic { Type.Generic.id; typeParameters = None } -> generic ~generic_names id
-    | _, x ->
-      print_endline "WILDCARD REACHED";
-      exit 1
+    | _, x -> Utils.unreachable ~message:"WILDCARD REACHED"
   )
 and function_params ?(generic_names=[]) = Function.Params.(function
     (* TODO: Consider aobut named type parameter include namespace like $npm$bigi$BigInteger *)
@@ -96,9 +94,7 @@ and generic ~generic_names = Type.Generic.Identifier.(function
         String.lowercase x
       else
         x
-    | Qualified x ->
-      print_endline @@ "Qualified ";
-      exit 1
+    | Qualified x -> Utils.unreachable ~message:"GenericQualified"
   )
 
 let errors x = exit 1
