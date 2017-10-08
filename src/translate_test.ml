@@ -11,9 +11,9 @@ let get_result filename =
   |> (fun (xs, _) -> Option.value_exn (List.hd xs))
 
 let translate_specs = List.map [
-    ("fixture/translate_function_actual.js", "f ∷ String -> Float");
-    ("fixture/translate_multiple_parameters.js", "f ∷ (String, Float) -> Bool");
-    ("fixture/translate_function_rest.js", "f ∷ (String, Float, [String]) -> IO ()");
+    ("fixture/basic.js", "f ∷ String -> Float");
+    ("fixture/multiple.js", "f ∷ (String, Float) -> Bool");
+    ("fixture/rest.js", "f ∷ (String, Float, [String]) -> IO ()");
     ("fixture/optional.js", "f ∷ Maybe String -> IO ()");
     ("fixture/generics.js", "f ∷ t -> [t]");
     ("fixture/type_alias.js", "f ∷ AType -> BType");
