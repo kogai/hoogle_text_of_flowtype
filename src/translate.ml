@@ -76,8 +76,13 @@ and translate_type ?(generic_names=[]) = Type.(function
     | _, Object x -> "Object"
     | _, Array x -> "[" ^ translate_type ~generic_names x ^ "]"
     | _, Void -> "IO ()"
+    | _, Null -> "()"
     | _, Generic { Type.Generic.id; typeParameters = None } -> generic ~generic_names id
     | _, Exists -> "*"
+    | _, Mixed -> "*"
+    | _, Any -> "*"
+    | _, Empty -> "IO ()"
+    | _, Nullable x -> "Maybe " ^ translate_type x
     | _, x -> Utils.unreachable ~message:"WILDCARD REACHED"
   )
 and function_params ?(generic_names=[]) = Function.Params.(function

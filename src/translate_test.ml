@@ -21,6 +21,12 @@ let translate_specs = List.map [
     ("fixture/bounded.js", "f ∷ String t => t -> [t]");
     ("fixture/existensial.js", "f ∷ a -> b");
     (* ("fixture/object.js", "f ∷ (Object t, Object a) => t -> a"); *)
+    ("fixture/null.js", "f ∷ () -> String"); 
+    ("fixture/any.js", "f ∷ a -> b");
+    ("fixture/mixed.js", "f ∷ a -> b");
+    ("fixture/empty.js", "f ∷ String -> IO ()");
+    ("fixture/nullable.js", "f ∷ Maybe String -> IO ()");*)
+    ("fixture/union.js", "f ∷ Union String Float -> IO ()");
     (* 
     Remained specs
     * Object
