@@ -28,14 +28,13 @@ let translate_specs = List.map [
        ("fixture/union.js", "f ∷ Union String Float -> IO ()");
        ("fixture/intersection.js", "f ∷ Intersection String Float -> IO ()");
        ("fixture/tupple.js", "f ∷ (String, Float) -> (Float, Bool)");
-       ("fixture/literal.js", "f ∷ String -> Bool -> Float") *)
+       ("fixture/literal.js", "f ∷ String -> Bool -> Float")
+       ("fixture/typeof.js", "f ∷ String -> IO ()"); *)
     (* ("fixture/object.js", "f ∷ Object a => string -> a"); *)
     (* 
     Remained specs
     * Object
     * ObjectBound
-    * Undefined
-    * Typeof
     *)
   ] (fun (filepath, expect) ->
     filepath >:: (fun ctx ->

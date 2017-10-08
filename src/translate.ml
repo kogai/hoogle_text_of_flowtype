@@ -78,8 +78,8 @@ and translate_type ?(generic_names=[]) = Type.(function
     | _, String | _, StringLiteral _ -> "String"
     | _, Number | _, NumberLiteral _ -> "Float"
     | _, Boolean | _, BooleanLiteral _ -> "Bool"
-    | _, Object x -> "Object"
-    | _, Array x -> "[" ^ translate_type ~generic_names x ^ "]"
+    | _, Object _ -> "Object"
+    | _, Array t -> "[" ^ translate_type ~generic_names t ^ "]"
     | _, Void -> "IO ()"
     | _, Null -> "()"
     | _, Generic { Type.Generic.id; typeParameters = None } -> generic ~generic_names id
@@ -87,8 +87,9 @@ and translate_type ?(generic_names=[]) = Type.(function
     | _, Mixed -> "*"
     | _, Any -> "*"
     | _, Empty -> "IO ()"
-    | _, Nullable x -> "Maybe " ^ translate_type x
-    | _, x -> Utils.unreachable ~message:"WILDCARD REACHED"
+    | _, Typeof t -> translate_type t
+    | _, Nullable t -> "Maybe " ^ translate_type t
+    | _, _ -> Utils.unreachable ~message:"WILDCARD REACHED"
   )
 
 and translate_types kind ts =
@@ -125,7 +126,10 @@ and generic ~generic_names = Type.Generic.Identifier.(function
       if is_generic then
         String.lowercase x
       else
-        x
+        (match x with
+         | "undefined" -> "IO ()"
+         | _ -> x)
+
     | Qualified x -> Utils.unreachable ~message:"GenericQualified"
   )
 
