@@ -11,4 +11,7 @@ let specs = [
         ("declare function f(x: string): number;\n",
          Some (File_key.SourceFile "fixture/basic.js"))
     );
+  "be able to derive successor" >:: (fun ctx ->
+      assert_equal (succ 'a') 'b';
+    );
 ]

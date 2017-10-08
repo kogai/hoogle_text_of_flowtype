@@ -8,6 +8,19 @@ let tupple_str_of_list = function
   | x::[] -> x
   | xs -> "(" ^ Utils.join xs ", " ^ ")"
 
+let type_of_type_var base =
+  let ty = ref '`' in (* Former of a'' *)
+  base
+  |> (fun x -> String.split x ' ')
+  |> (fun xs -> List.map xs (function
+      | "*" ->
+        let next = Utils.succ !ty in
+        ty := next;
+        Char.to_string next
+      | x -> x
+    ))
+  |> (fun xs -> Utils.join xs " ")
+
 let rec declarations (loc, statements, errors) =
   statements
   |> (fun xs -> List.map xs translate_statement)
@@ -20,7 +33,8 @@ and translate_statement = Statement.(function
     | _, DeclareFunction ({ DeclareFunction.id; typeAnnotation; }) ->
       let (_, identifier) = id in
       let (_, function_declaration) = typeAnnotation in
-      Some (identifier ^ " ∷ " ^ translate_type function_declaration)
+      let result = identifier ^ " ∷ " ^ translate_type function_declaration in
+      Some (type_of_type_var result)
     | _ -> None
   )
 and gather_generic_names {Type.ParameterDeclaration.params} = 
@@ -34,7 +48,7 @@ and gather_bounds {Type.ParameterDeclaration.params} =
   |> (fun ps -> List.map ps (fun (_, { Type.ParameterDeclaration.TypeParam.name; bound }) ->
       match bound with
       | Some b -> (b, name)
-      | _ -> Utils.unreachable ()
+      | _ -> Utils.unreachable ~message:"Unreachable bounded parameter"
     ))
   |> (fun ps -> List.map ps (fun ((_, b), name) ->
       let bound = translate_type b in
@@ -59,9 +73,11 @@ and translate_type ?(generic_names=[]) = Type.(function
     | _, String -> "String"
     | _, Number -> "Float"
     | _, Boolean -> "Bool"
+    | _, Object x -> "Object"
     | _, Array x -> "[" ^ translate_type ~generic_names x ^ "]"
     | _, Void -> "IO ()"
     | _, Generic { Type.Generic.id; typeParameters = None } -> generic ~generic_names id
+    | _, Exists -> "*"
     | _, x -> Utils.unreachable ~message:"WILDCARD REACHED"
   )
 and function_params ?(generic_names=[]) = Function.Params.(function
