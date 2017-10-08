@@ -13,3 +13,7 @@ let join xs sep =
     | y::ys -> y ^ sep ^ f ys
   in
   f xs
+
+let unreachable () =
+  print_endline "Unreachable path had reached.";
+  exit 1

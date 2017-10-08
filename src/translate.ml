@@ -26,13 +26,30 @@ and translate_statement = Statement.(function
 and gather_generic_names {Type.ParameterDeclaration.params} = 
   List.map params (fun (_, { Type.ParameterDeclaration.TypeParam.name }) -> name)
 
+and gather_bounds {Type.ParameterDeclaration.params} = 
+  params
+  |> (fun ps -> List.filter ps (fun (_, { Type.ParameterDeclaration.TypeParam.bound }) ->
+      Option.is_some bound
+    ))
+  |> (fun ps -> List.map ps (fun (_, { Type.ParameterDeclaration.TypeParam.name; bound }) ->
+      match bound with
+      | Some b -> (b, name)
+      | _ -> Utils.unreachable ()
+    ))
+  |> (fun ps -> List.map ps (fun ((_, b), name) ->
+      let bound = translate_type b in
+      bound ^ " " ^ String.lowercase name ^ " => "
+    ))
+  |> tupple_str_of_list
+
 and translate_type ?(generic_names=[]) = Type.(function
     | _, Function ({ Function.params; returnType; typeParameters = Some (_, typeDeclaration) }) ->
       (* We have to gather TypeParameterDeclaration in current path *)
       let generic_names = gather_generic_names typeDeclaration in
+      let bounds = gather_bounds typeDeclaration in
       let parameters = function_params ~generic_names params in
       let return_type = translate_type ~generic_names returnType in
-      tupple_str_of_list parameters ^ " -> " ^ return_type
+      bounds ^ tupple_str_of_list parameters ^ " -> " ^ return_type
 
     | _, Function ({ Function.params; returnType; typeParameters = None }) ->
       let parameters = function_params params in

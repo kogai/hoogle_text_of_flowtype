@@ -18,9 +18,9 @@ let translate_specs = List.map [
     ("fixture/generics.js", "f ∷ t -> [t]");
     ("fixture/type_alias.js", "f ∷ AType -> BType");
     ("fixture/curried.js", "f ∷ String -> Float -> Bool");
+    ("fixture/bounded.js", "f ∷ String t => t -> [t]");
     (* 
     Remained specs
-    * bounded
     * JavaScript tupple (actually Array)
     *)
   ] (fun (filepath, expect) ->
