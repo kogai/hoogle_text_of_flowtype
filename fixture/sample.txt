@@ -10,3 +10,14 @@ foo ∷ String -> String
 --   This will come out UTF8 encoded.
 @url https://github.com/flowtype/flow-typed/tree/master/definitions/npm/ramda_v0.x.x
 bar ∷ Int -> Int
+
+- | Type-class for angles.
+class Angle a
+sine :: (Angle a, Floating x) => a x -> x
+cosine :: (Angle a, Floating x) => a x -> x
+tangent :: (Angle a, Floating x) => a x -> x
+arcsine :: (Angle a, Floating x) => x -> a x
+arccosine :: (Angle a, Floating x) => x -> a x
+arctangent :: (Angle a, Floating x) => x -> a x
+instance Eq x => Eq (Degrees x)
+instance Ord x => Ord (Degrees x)
