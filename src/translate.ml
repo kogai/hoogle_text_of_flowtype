@@ -30,21 +30,40 @@ let type_of_type_var base =
     )
   |> Utils.join ~sep:" "
 
-let rec declarations (loc, statements, errors) =
+let rec declarations (loc, statements, comments) =
   statements
   |> List.map ~f:translate_statement
   |> List.fold ~init: [] ~f: (fun acc x -> match (acc, x) with
-      | acc, Some x -> x :: acc 
+      | acc, Some (loc, dec) ->
+        let comments = relative_comment loc comments in
+        (String.concat ~sep:"\n" (comments @ [dec])) :: acc
       | acc, None -> acc
     )
 
+and relative_comment { Loc.start } comments
+  = comments
+    |> List.fold
+      ~init:[]
+      ~f:(fun acc ({Loc._end}, ast) ->
+          (let distance = Loc.pos_cmp start _end in
+           if distance = 1 then
+             match ast with
+             | Comment.Block c -> String.split_lines c
+             | Comment.Line c -> [c]
+           else
+             [""]
+          )::acc)
+    |> List.concat
+    |> List.filter ~f:(fun x -> not @@ String.is_empty x)
+    |> List.mapi ~f:(fun i c -> if i = 0 then "-- | " ^ c else "--   " ^ c)
+
 and translate_statement = Statement.(function
     | _, DeclareFunction ({
-        DeclareFunction.id=(_, id);
+        DeclareFunction.id=(loc, id);
         typeAnnotation=(_, body);
       }) ->
-      id ^ " ∷ " ^ translate_type body
-      |> type_of_type_var
+      (loc, id ^ " ∷ " ^ translate_type body)
+      |> (fun (loc, base) -> (loc, (type_of_type_var base)))
       |> Option.return
     | _ -> None
   )

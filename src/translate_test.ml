@@ -33,6 +33,7 @@ let translate_specs = List.map [
     ("fixture/object.js", "f ∷ Object -> Object");
     ("fixture/object_bound.js", "f ∷ Object t => t -> [t]");
     ("fixture/generic_existensial.js", "f ∷ a -> b");
+    ("fixture/comment.js", "-- | This is documental comment\n--   This is second line\nf ∷ a -> b");
   ] (fun (filepath, expect) ->
     filepath >:: (fun ctx ->
         let actual = get_result filepath in
