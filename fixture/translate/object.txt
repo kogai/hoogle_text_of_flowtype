@@ -1,2 +1,2 @@
-@url fixture/object.js#L1
+@url fixture/translate/object.js#L1
 f ∷ Object -> Object

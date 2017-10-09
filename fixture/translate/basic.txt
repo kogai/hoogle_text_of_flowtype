@@ -1,2 +1,2 @@
-@url fixture/basic.js#L1
+@url fixture/translate/basic.js#L1
 f ∷ String -> Float

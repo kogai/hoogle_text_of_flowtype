@@ -1,2 +1,2 @@
-@url fixture/mixed.js#L1
+@url fixture/translate/mixed.js#L1
 f ∷ a -> b

@@ -1,2 +1,2 @@
-@url fixture/any.js#L1
+@url fixture/translate/any.js#L1
 f ∷ a -> b

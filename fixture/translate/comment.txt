@@ -1,4 +1,4 @@
 -- | This is documental comment
 --   This is second line
-@url fixture/comment.js#L5
+@url fixture/translate/comment.js#L5
 f ∷ a -> b

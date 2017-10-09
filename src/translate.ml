@@ -73,7 +73,26 @@ and translate_statement = Statement.(function
       (loc, id ^ " ∷ " ^ translate_type body)
       |> (fun (loc, base) -> (loc, (type_of_type_var base)))
       |> Option.return
-    | _ -> None
+    | _, TypeAlias {
+        TypeAlias.id=(loc, id);
+        typeParameters = None;
+        right;
+      } ->
+      (loc, id ^ " ∷ " ^ translate_type right)
+      |> (fun (loc, base) -> (loc, (type_of_type_var base)))
+      |> Option.return
+    | _, TypeAlias {
+        TypeAlias.id=(loc, id);
+        typeParameters = Some (_, typeParameter);
+        right;
+      } ->
+      let generic_names = gather_generic_names typeParameter in
+      (loc, id ^ " ∷ " ^ translate_type ~generic_names right)
+      |> (fun (loc, base) -> (loc, (type_of_type_var base)))
+      |> Option.return
+    | _ ->
+      ignore @@ Utils.unreachable ~message:"No declare";
+      None
   )
 and gather_generic_names {Type.ParameterDeclaration.params} = 
   List.map params (fun (_, { Type.ParameterDeclaration.TypeParam.name }) -> name)
@@ -101,19 +120,25 @@ and constraints ts =
       else x
     )
 
+and translate_function ~bounds ~generic_names ~params ~return_type =
+  let parameters = function_params ~generic_names params in
+  let return_type = translate_type ~generic_names return_type in
+  String.concat ~sep:"" [
+    constraints bounds;
+    tupple_str_of_list parameters;
+    " -> ";
+    return_type;
+  ]
+
 and translate_type ?(generic_names=[]) = Type.(function
-    | _, Function ({ Function.params; returnType; typeParameters = Some (_, typeDeclaration) }) ->
+    | _, Function ({ Function.params; returnType = return_type; typeParameters = Some (_, typeDeclaration) }) ->
       (* We have to gather TypeParameterDeclaration in current path *)
       let generic_names = gather_generic_names typeDeclaration in
       let bounds = gather_bounds typeDeclaration in
-      let parameters = function_params ~generic_names params in
-      let return_type = translate_type ~generic_names returnType in
-      constraints bounds ^ tupple_str_of_list parameters ^ " -> " ^ return_type
+      translate_function ~bounds ~generic_names ~params ~return_type
 
-    | _, Function ({ Function.params; returnType; typeParameters = None }) ->
-      let parameters = function_params params in
-      let return_type = translate_type returnType in
-      tupple_str_of_list parameters ^ " -> " ^ return_type
+    | _, Function ({ Function.params; returnType = return_type; typeParameters = None }) ->
+      translate_function ~bounds:[] ~generic_names ~params ~return_type
 
     | _, Union (t0, t1, ts) -> translate_types "Union " (t0::t1::ts)
     | _, Intersection (t0, t1, ts) -> translate_types "Intersection " (t0::t1::ts)

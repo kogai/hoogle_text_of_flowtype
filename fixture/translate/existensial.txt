@@ -1,2 +1,2 @@
-@url fixture/existensial.js#L1
+@url fixture/translate/existensial.js#L1
 f ∷ a -> b

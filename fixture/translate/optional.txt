@@ -1,2 +1,2 @@
-@url fixture/optional.js#L1
+@url fixture/translate/optional.js#L1
 f ∷ Maybe String -> IO ()

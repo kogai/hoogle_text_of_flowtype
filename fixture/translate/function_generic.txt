@@ -1,0 +1,2 @@
+@url fixture/translate/function_generic.js#L1
+f ∷ t -> [t]

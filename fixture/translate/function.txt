@@ -1,0 +1,2 @@
+@url fixture/translate/function.js#L1
+f ∷ String -> Float

@@ -1,2 +1,2 @@
-@url fixture/object_bound.js#L1
+@url fixture/translate/object_bound.js#L1
 f ∷ Object t => t -> [t]
