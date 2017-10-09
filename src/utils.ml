@@ -6,6 +6,7 @@ let open_file filename = (
   Some (File_key.SourceFile filename)
 )
 
+(* Be able to replace by String.concat *)
 let join xs ~sep =
   let rec f = function
     | [] -> ""

@@ -8,15 +8,24 @@ let tupple_str_of_list = function
   | x::[] -> x
   | xs -> "(" ^ Utils.join xs ", " ^ ")"
 
+let rec find_start_char c = function
+  | [] -> c
+  | x::xs ->
+    if x = String.of_char c then
+      find_start_char (Utils.succ c) xs
+    else
+      find_start_char c xs
+
 let type_of_type_var base =
-  let ty = ref '`' in (* Former of a'' *)
-  base
-  |> String.split ~on:' '
+  let constraints = base
+                    |> String.split ~on:' ' in
+  let ty = ref (find_start_char 'a' constraints) in (* Former of a'' *)
+  constraints
   |> List.map ~f:(function
       | "*" ->
-        let next = Utils.succ !ty in
-        ty := next;
-        Char.to_string next
+        let current = !ty in
+        ty := Utils.succ current;
+        Char.to_string current
       | x -> x
     )
   |> Utils.join ~sep:" "
@@ -54,9 +63,16 @@ and gather_bounds {Type.ParameterDeclaration.params} =
     )
   |> List.map ~f:(fun ((_, b), name) ->
       let bound = translate_type b in
-      bound ^ " " ^ String.lowercase name ^ " => "
+      bound ^ " " ^ String.lowercase name
     )
+
+and constraints ts =
+  ts
   |> tupple_str_of_list
+  |> (fun x ->
+      if String.length x > 0 then x ^ " => "
+      else x
+    )
 
 and translate_type ?(generic_names=[]) = Type.(function
     | _, Function ({ Function.params; returnType; typeParameters = Some (_, typeDeclaration) }) ->
@@ -65,7 +81,7 @@ and translate_type ?(generic_names=[]) = Type.(function
       let bounds = gather_bounds typeDeclaration in
       let parameters = function_params ~generic_names params in
       let return_type = translate_type ~generic_names returnType in
-      bounds ^ tupple_str_of_list parameters ^ " -> " ^ return_type
+      constraints bounds ^ tupple_str_of_list parameters ^ " -> " ^ return_type
 
     | _, Function ({ Function.params; returnType; typeParameters = None }) ->
       let parameters = function_params params in
@@ -80,7 +96,9 @@ and translate_type ?(generic_names=[]) = Type.(function
     | _, String | _, StringLiteral _ -> "String"
     | _, Number | _, NumberLiteral _ -> "Float"
     | _, Boolean | _, BooleanLiteral _ -> "Bool"
-    | _, Object _ -> "{}"
+    (* TODO:
+       Consider to replace `Object` to constarint `Object a` *)
+    | _, Object _ -> "Object"
     | _, Array t -> "[" ^ translate_type ~generic_names t ^ "]"
     | _, Void -> "IO ()"
     | _, Null -> "()"
