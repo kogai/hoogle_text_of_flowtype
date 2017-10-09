@@ -1,1 +1,2 @@
+@url fixture/curried.js#L1
 f ∷ String -> Float -> Bool

@@ -1,1 +1,2 @@
+@url fixture/generic_existensial.js#L1
 f ∷ a -> b

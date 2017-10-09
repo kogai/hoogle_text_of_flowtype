@@ -1,1 +1,2 @@
+@url fixture/empty.js#L1
 f ∷ String -> IO ()

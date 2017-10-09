@@ -1,1 +1,2 @@
+@url fixture/generics.js#L1
 f ∷ t -> [t]

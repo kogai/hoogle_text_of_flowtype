@@ -1,1 +1,2 @@
+@url fixture/type_alias.js#L3
 f ∷ AType -> BType

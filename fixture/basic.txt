@@ -1,1 +1,2 @@
+@url fixture/basic.js#L1
 f ∷ String -> Float

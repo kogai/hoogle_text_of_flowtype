@@ -1,1 +1,2 @@
+@url fixture/null.js#L1
 f ∷ () -> String

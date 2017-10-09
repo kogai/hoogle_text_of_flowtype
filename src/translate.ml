@@ -30,13 +30,20 @@ let type_of_type_var base =
     )
   |> Utils.join ~sep:" "
 
-let rec declarations (loc, statements, comments) =
+let rec declarations ?(root="") (loc, statements, comments) =
   statements
   |> List.map ~f:translate_statement
   |> List.fold ~init: [] ~f: (fun acc x -> match (acc, x) with
       | acc, Some (loc, dec) ->
         let comments = relative_comment loc comments in
-        (String.concat ~sep:"\n" (comments @ [dec])) :: acc
+        let url = match Loc.source loc with
+          | Some source ->
+            let { Loc.start } = loc in
+            let { Loc.line } = start in
+            "@url " ^ (File_key.to_string source) ^ "#L" ^ string_of_int line
+          | None -> ""
+        in
+        (String.concat ~sep:"\n" (comments @ [url] @ [dec])) :: acc
       | acc, None -> acc
     )
   |> List.map ~f:(fun d -> d ^ "\n")

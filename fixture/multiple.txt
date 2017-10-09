@@ -1,1 +1,2 @@
+@url fixture/multiple.js#L1
 f ∷ (String, Float) -> Bool

@@ -1,1 +1,2 @@
+@url fixture/typeof.js#L1
 f ∷ String -> IO ()
