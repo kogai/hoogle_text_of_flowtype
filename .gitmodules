@@ -1,3 +1,6 @@
 [submodule "flow"]
 	path = flow
 	url = git@github.com:facebook/flow.git
+[submodule "flow-typed"]
+	path = flow-typed
+	url = git@github.com:flowtype/flow-typed.git
