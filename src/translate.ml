@@ -39,6 +39,7 @@ let rec declarations (loc, statements, comments) =
         (String.concat ~sep:"\n" (comments @ [dec])) :: acc
       | acc, None -> acc
     )
+  |> List.map ~f:(fun d -> d ^ "\n")
 
 and relative_comment { Loc.start } comments
   = comments
