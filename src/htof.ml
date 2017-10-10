@@ -8,7 +8,7 @@ open Cmdliner
 let parse filepath = filepath
                      |> Utils.open_file
                      |> (fun (content, source) -> program_file content source)
-                     |> (fun (ast, _) -> declarations ast)
+                     |> (fun (ast, _) -> translate ~root:"https://github.com/flowtype/flow-typed/tree/master/definitions" ast)
                      |> String.concat ~sep:""
                      |> String.chop_suffix_exn ~suffix:"\n"
 

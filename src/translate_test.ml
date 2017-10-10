@@ -7,7 +7,7 @@ let get_result filename =
   filename
   |> Utils.open_file
   |> (fun (content, filename) -> program_file content filename)
-  |> (fun (ocaml_ast, errors) -> Translate.declarations ocaml_ast, errors)
+  |> (fun (ocaml_ast, errors) -> Translate.translate ocaml_ast, errors)
   |> (fun (xs, _) -> Option.value_exn (List.hd xs))
 
 let translate_specs = List.map [
