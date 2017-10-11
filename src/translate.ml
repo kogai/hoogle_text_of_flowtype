@@ -107,7 +107,7 @@ and translate_statement = Statement.(function
               value;
               (* typeAnnotation = Some (_, typeParameter); *)
             }) ->
-            let rrr = translate_type value in
+            let result = translate_function value in
             (* (loc, id ^ " ∷ " ^ translate_type ~generic_names right)
                |> (fun (loc, base) -> (loc, (type_of_type_var base)))
                |> Option.return *)
@@ -123,6 +123,7 @@ and translate_statement = Statement.(function
       ignore @@ Utils.unreachable ~message:"No declare";
       None
   )
+
 and gather_generic_names {Type.ParameterDeclaration.params} = 
   List.map params (fun (_, { Type.ParameterDeclaration.TypeParam.name }) -> name)
 
@@ -149,8 +150,8 @@ and constraints ts =
       else x
     )
 
-and translate_function ~bounds ~generic_names ~params ~return_type =
-  let parameters = function_params ~generic_names params in
+and translate_type_function ~bounds ~generic_names ~params ~return_type =
+  let parameters = function_type_params ~generic_names params in
   let return_type = translate_type ~generic_names return_type in
   String.concat ~sep:"" [
     constraints bounds;
@@ -164,10 +165,10 @@ and translate_type ?(generic_names=[]) = Type.(function
       (* We have to gather TypeParameterDeclaration in current path *)
       let generic_names = gather_generic_names typeDeclaration in
       let bounds = gather_bounds typeDeclaration in
-      translate_function ~bounds ~generic_names ~params ~return_type
+      translate_type_function ~bounds ~generic_names ~params ~return_type
 
     | _, Function ({ Function.params; returnType = return_type; typeParameters = None }) ->
-      translate_function ~bounds:[] ~generic_names ~params ~return_type
+      translate_type_function ~bounds:[] ~generic_names ~params ~return_type
 
     | _, Union (t0, t1, ts) -> translate_types "Union " (t0::t1::ts)
     | _, Intersection (t0, t1, ts) -> translate_types "Intersection " (t0::t1::ts)
@@ -198,25 +199,76 @@ and translate_types kind ts =
           |> List.map ~f:translate_type
           |> Utils.join ~sep:" ")
 
+and translate_function = Function.(function
+    | loc, { id = Some (_, id); params; returnType = Some (_, return_type); typeParameters = None } ->
+      let parameters = function_params params in
+      (* (loc, id ^ " ∷ " ^ translate_type body) *)
+      (*
+         |> (fun (loc, base) -> (loc, (type_of_type_var base)))
+         |> Option.return *)
+      (* translate_type_function ~bounds:[] ~generic_names:[] ~params ~return_type *)
+      exit 1
+    | _ -> Utils.unreachable ~message: "Not function"
+  )
+(*
+   id: 'M Identifier.t option;
+   params: 'M Params.t;
+   returnType: 'M Type.annotation option;
+   typeParameters: 'M Type.ParameterDeclaration.t option; *)
+
 and function_params ?(generic_names=[]) = Function.Params.(function
+    | _, {
+        Function.Params.params;
+        rest = Some (_, { Function.RestElement.argument; });
+      } ->
+      let arguments = List.map params (function_param ~generic_names) in
+      (*
+         let rest_arguments = function_param ~generic_names argument in
+         List.append arguments [rest_arguments]
+        *)
+      exit 1
+    | _, {
+        Function.Params.params;
+        rest = None;
+      } ->
+      (* let arguments = List.map params (function_param ~generic_names) in
+         let rest_arguments = function_param ~generic_names argument in
+         List.append arguments [rest_arguments] *)
+      exit 1
+  )
+
+and function_type_params ?(generic_names=[]) = Type.Function.Params.(function
     (* TODO: Consider aobut named type parameter include namespace like $npm$bigi$BigInteger *)
     | _, {
         Type.Function.Params.params;
         rest = Some (_, { Type.Function.RestParam.argument });
       } ->
-      let arguments = List.map params (function_param ~generic_names) in
-      let rest_arguments = function_param ~generic_names argument in
+      let arguments = List.map params (function_type_param ~generic_names) in
+      let rest_arguments = function_type_param ~generic_names argument in
       List.append arguments [rest_arguments]
-    | _, { Type.Function.Params.params; rest = None } ->
-      List.map params (function_param ~generic_names)
+    | _, {
+        Type.Function.Params.params;
+        rest = None
+      } ->
+      List.map params (function_type_param ~generic_names)
   )
-and function_param ~generic_names = Type.Function.Param.(function
-    | _, { typeAnnotation; optional; name } ->
-      if optional then
-        "Maybe " ^ translate_type ~generic_names  typeAnnotation
-      else
-        translate_type ~generic_names typeAnnotation
-  )
+
+and function_type_param ~generic_names = function
+  | _, { Type.Function.Param.typeAnnotation; optional; name } ->
+    if optional then
+      "Maybe " ^ translate_type ~generic_names  typeAnnotation
+    else
+      translate_type ~generic_names typeAnnotation
+
+and function_param ~generic_names = function
+  | _, x ->
+    let ttt = translate_type x in
+    (* if optional then
+       "Maybe " ^ translate_type ~generic_names  typeAnnotation
+       else
+       translate_type ~generic_names typeAnnotation *)
+    exit 1
+
 and generic ~generic_names = Type.Generic.Identifier.(function
     | Unqualified (_, x) ->
       let is_generic =
