@@ -2,8 +2,10 @@ open Core
 open Parser_flow
 open Translate
 
+(* HTOF stands for Handle type of flow *)
+
 let handle filepath =
-  print_endline "\n";
+  print_endline "Start\n";
 
   let result = filepath
                |> Utils.open_file
