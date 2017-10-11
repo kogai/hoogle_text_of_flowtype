@@ -90,7 +90,12 @@ and translate_statement = Statement.(function
       (loc, id ^ " ∷ " ^ translate_type ~generic_names right)
       |> (fun (loc, base) -> (loc, (type_of_type_var base)))
       |> Option.return
-    | _ ->
+    | _, ImportDeclaration _ ->
+      (* ignore @@ Utils.unreachable ~message:"ImportDeclaration"; *)
+      None
+    | _, DeclareModule _ ->
+      Utils.unreachable ~message:"DeclareModule";
+    | _, _ ->
       ignore @@ Utils.unreachable ~message:"No declare";
       None
   )
