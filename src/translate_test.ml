@@ -12,29 +12,29 @@ let get_result filename =
 
 let translate_specs = List.map [
     "fixture/translate/basic";
-       "fixture/translate/multiple";
-       "fixture/translate/rest";
-       "fixture/translate/optional";
-       "fixture/translate/generics";
-       "fixture/translate/type_alias";
-       "fixture/translate/curried";
-       "fixture/translate/bounded";
-       "fixture/translate/existensial";
-       "fixture/translate/null"; 
-       "fixture/translate/any";
-       "fixture/translate/mixed";
-       "fixture/translate/empty";
-       "fixture/translate/nullable";
-       "fixture/translate/union";
-       "fixture/translate/intersection";
-       "fixture/translate/tuple";
-       "fixture/translate/literal";
-       "fixture/translate/typeof";
-       "fixture/translate/object";
-       "fixture/translate/object_bound";
-       "fixture/translate/generic_existensial";
-       "fixture/translate/comment";
-       "fixture/translate/function";
+    "fixture/translate/multiple";
+    "fixture/translate/rest";
+    "fixture/translate/optional";
+    "fixture/translate/generics";
+    "fixture/translate/type_alias";
+    "fixture/translate/curried";
+    "fixture/translate/bounded";
+    "fixture/translate/existensial";
+    "fixture/translate/null"; 
+    "fixture/translate/any";
+    "fixture/translate/mixed";
+    "fixture/translate/empty";
+    "fixture/translate/nullable";
+    "fixture/translate/union";
+    "fixture/translate/intersection";
+    "fixture/translate/tuple";
+    "fixture/translate/literal";
+    "fixture/translate/typeof";
+    "fixture/translate/object";
+    "fixture/translate/object_bound";
+    "fixture/translate/generic_existensial";
+    "fixture/translate/comment";
+    "fixture/translate/function";
     "fixture/translate/function_generic";
     (* TODO:
        Class
