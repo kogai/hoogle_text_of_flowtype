@@ -1,2 +1,7 @@
+- | This is A class
 @url fixture/translate/class.js#L1
-f ∷ String t => t -> [t]
+class A t
+a ∷ String -> Float
+b ∷ t -> [t]
+c ∷ u -> [u]
+d ∷ String -> Float

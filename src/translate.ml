@@ -90,6 +90,35 @@ and translate_statement = Statement.(function
       (loc, id ^ " ∷ " ^ translate_type ~generic_names right)
       |> (fun (loc, base) -> (loc, (type_of_type_var base)))
       |> Option.return
+    | _, ClassDeclaration {
+        Class.id=Some (loc, id);
+        body=(_, {Class.Body.body});
+        typeParameters = Some (_, typeParameter);
+        (* superClass;
+           superTypeParameters;
+           implements;
+           classDecorators; *)
+      } ->
+      let generic_names = gather_generic_names typeParameter in
+      let result = body |> List.map ~f:(fun b ->
+          match b with
+          | Class.Body.Method (loc, {
+              Class.Method.key;
+              value;
+              (* typeAnnotation = Some (_, typeParameter); *)
+            }) ->
+            let rrr = translate_type value in
+            (* (loc, id ^ " ∷ " ^ translate_type ~generic_names right)
+               |> (fun (loc, base) -> (loc, (type_of_type_var base)))
+               |> Option.return *)
+            None
+          | _ -> None
+        )
+      in
+      (* (loc, id ^ " ∷ " ^ translate_type ~generic_names right)
+         |> (fun (loc, base) -> (loc, (type_of_type_var base)))
+         |> Option.return *)
+      Utils.unreachable ~message:"No declare";
     | _ ->
       ignore @@ Utils.unreachable ~message:"No declare";
       None

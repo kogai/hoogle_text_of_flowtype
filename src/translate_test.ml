@@ -35,10 +35,11 @@ let translate_specs = List.map [
        "fixture/translate/generic_existensial";
        "fixture/translate/comment";
        "fixture/translate/function";
-    "fixture/translate/function_generic"; *)
-       "fixture/translate/class";
+       "fixture/translate/function_generic"; *)
+    "fixture/translate/class";
     (* TODO:
        Class
+       SuperClass
        Interface
        Module *)
   ] (fun (filepath) ->
