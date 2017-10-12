@@ -1,0 +1,10 @@
+-- |
+module my-module
+
+-- |
+@url fixture/htof/module.js#L4
+f ∷ String -> Float
+
+-- |
+@url fixture/htof/module.js#L5
+g ∷ t -> [t]

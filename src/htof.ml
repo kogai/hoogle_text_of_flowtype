@@ -2,7 +2,7 @@ open Core
 open Parser_flow
 open Translate
 
-(* HTOF stands for Handle type of flow *)
+(* HTOF stands for Hoogle text of flow *)
 
 let handle filepath =
   print_endline "Start\n";
