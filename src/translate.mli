@@ -1,5 +1,10 @@
+type t =
+  | ModuleDeclare of Loc.t * string
+  | FunctionDeclare of Loc.t * string
+  | NoDeclare
+
 val declarations: ?root:string -> Loc.t * Loc.t Ast.Statement.t list * (Loc.t * Ast.Comment.t') list -> string list
-(* val translate_statement: Loc.t Ast.Statement.t -> (Loc.t * string) option *)
+val translate_statement: root:string -> comments:(Loc.t * Ast.Comment.t') list -> Loc.t Ast.Statement.t -> t
 val tupple_str_of_list: string Core.List.t -> string
 
 val errors: (Loc.t * Parse_error.t) list -> string

@@ -44,7 +44,7 @@ let translate_specs = List.map [
     filepath >:: (fun ctx ->
         let actual = get_result @@ filepath ^ ".js" in
         let expect = In_channel.read_all @@ filepath ^ ".txt" in
-        print_endline actual;
+        (* print_endline actual; *)
         assert_equal actual expect
       );
   )
