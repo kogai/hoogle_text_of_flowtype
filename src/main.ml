@@ -22,8 +22,8 @@ let () =
       prerr_newline ();
       print_error errors;
       prerr_newline ();
-      exit (0)
+      exit 0
   in
 
-  print_endline @@ Translate.string_of_json result;
+  Core.List.iter result print_endline;
   ()
