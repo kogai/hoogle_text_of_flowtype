@@ -15,20 +15,14 @@ jobs:
       - run:
           name: Prepare
           command: |
-            make init
             make install
-            git submodule update -i
       - save_cache:
           name: Save opam cache
           paths:
             - ~/.opam
           key: >-
-            opam-cache-{{ .Environment.COMMON_CACHE_KEY }}-{{ checksum
-            "Makefile" }}
+            opam-cache-{{ .Environment.COMMON_CACHE_KEY }}-{{ checksum "Makefile" }}
       - run:
-          name: Do test
+          name: Test
           command: |
-            eval $(opam config env)
-            ocamlfind list
-            ocamlfind query ounit
-            # make test
+            make test-ci

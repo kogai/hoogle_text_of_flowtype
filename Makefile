@@ -13,6 +13,7 @@ OCB_FLAGS := -use-ocamlfind -use-menhir -Is $(SRC_DIRS) -pkgs $(PKGS)
 OCB := ocamlbuild $(OCB_FLAGS)
 MODULES = $(wildcard $(abspath ./)/flow/_build/src/**/*.cmx)
 OBJECTS = $(patsubst %.ml,%.cmxa,$(MODULES))
+OPAM_VER := 4.03.0
 
 all:$(NAME).native $(NAME).byte
 
@@ -45,13 +46,22 @@ test: $(TEST_NAME).native $(TEST_NAME).byte
 	./$(TEST_NAME).native
 	./$(TEST_NAME).byte
 
+.PHONY: test-ci
+test-ci: install
+	make test
+
 .PHONY: init
 init:
-	opam init -ya --comp=4.03.0
+	opam init -ya --comp=$(OPAM_VER)
+	opam switch $(OPAM_VER)
 	eval `opam config env`
 
+.PHONY: git-submodule
+git-submodule:
+	git submodule update -i
+
 .PHONY: install
-install:
+install: init git-submodule
 	opam update
 	opam install -y \
 		ocamlfind \
@@ -63,8 +73,9 @@ install:
 		ounit
 
 .PHONY: setup
-setup:
-	opam user-setup install -y
+setup: install git-submodule
+	opam install setup
+	opam user-setup install
 
 .PHONY: clean
 clean:
