@@ -12,6 +12,8 @@ let parse filepath = filepath
                      |> String.concat ~sep:""
                      |> String.chop_suffix_exn ~suffix:"\n"
 
+(* TODO: support to convert directory *)
+
 module Cmd : sig
   val name: string
   val run: string -> bool -> unit
@@ -24,7 +26,7 @@ end = struct
     Arg.(value & pos 0 string "" & info [] ~docv:"Source" ~doc)
 
   let dry_run =
-    let doc = "Repeat the message $(docv) times." in
+    let doc = "Output to stdout instead of writting to file" in
     Arg.(value & flag & info ["d"; "dry-run"] ~docv:"Dry-run" ~doc)
 
   let run file dry_run =
