@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: ocaml/opam
+      - image: ocaml/opam:alpine-3.6_ocaml-4.03.0
         environment:
           TERM: xterm-256color
     working_directory: ~/hoogle_text_of_flowtype

@@ -46,8 +46,14 @@ $(TEST_NAME).byte: $(SRC_FILES)
 	$(OCB) $(TEST_NAME).byte
 
 .PHONY: test
-test: $(TEST_NAME).native $(TEST_NAME).byte
+test: test-native test-byte
+
+.PHONY: test-native
+test-native: $(TEST_NAME).native
 	./$(TEST_NAME).native
+
+.PHONY: test-byte
+test-byte: $(TEST_NAME).byte
 	./$(TEST_NAME).byte
 
 .PHONY: test-ci
