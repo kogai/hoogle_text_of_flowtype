@@ -5,4 +5,3 @@ val join: string list -> sep:string -> string
 val unreachable: ?message: string -> 'a
 val succ: char -> char
 val is_valid_path: string -> bool
-val run: unit -> unit

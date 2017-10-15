@@ -1,6 +1,6 @@
 NAME := main
 TEST_NAME := $(NAME)_test
-PKGS := ounit,core,ppx_deriving.show,sedlex,yojson
+PKGS := ounit,core,ppx_deriving.show,sedlex,yojson,cmdliner
 
 PARSER_NAME := parser_flow.cmxa
 PARSER_DIR := $(abspath ./)/flow/_build/src/parser
