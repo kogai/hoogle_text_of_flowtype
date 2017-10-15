@@ -16,6 +16,7 @@ jobs:
           name: Prepare
           command: |
             make install
+            ocamlfind query sedlex
       - save_cache:
           name: Save opam cache
           paths:

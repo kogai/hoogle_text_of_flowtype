@@ -1,29 +1,11 @@
-open Parser_flow
-
-let rec print_error = function
-  | [] -> print_endline "No error";
-  | (_, e)::es ->
-    print_endline @@ Parse_error.PP.error e;
-    print_error es
+open Core
 
 let () =
-  let content = "const foo: string = \"my-string;\"" in
-  let filename = Some (File_key.SourceFile "my-file.js") in
-  let (ocaml_ast, errors) = program_file content filename in
-
-  let (result, _) =
-    try
-      let (translated_ast, errors) =
-        let (ocaml_ast, errors) = program_file content filename in
-        Translate.declarations ocaml_ast, errors
-      in
-      (translated_ast, errors)
-    with Parse_error.Error l ->
-      prerr_newline ();
-      print_error errors;
-      prerr_newline ();
+  let argv = Array.to_list Sys.argv in
+  match argv with
+    | [] | _::[] -> Utils.unreachable ~message:"Expected command"
+    | _::file::rest ->
+      print_endline (Printf.sprintf "Converting %s..." file);
+      let result = Htof.handle file in
+      print_endline result;
       exit 0
-  in
-
-  Core.List.iter result print_endline;
-  ()

@@ -25,11 +25,15 @@ $(NAME).byte: $(PARSER_DIR)/$(PARSER_NAME) $(SRC_FILES)
 
 .PHONY: native
 native: $(NAME).native
-	./$(NAME).native
+	./$(NAME).native $(ARGS)
 
 .PHONY: byte
 byte: $(NAME).byte
-	./$(NAME).byte
+	./$(NAME).byte $(ARGS)
+
+# Execute like `make ARGS=subcommand run` equivalent as `main.(native|byte) subcommand`
+.PHONY: run
+run: native byte
 
 $(PARSER_DIR)/$(PARSER_NAME):
 	@cd flow/src/parser && \
