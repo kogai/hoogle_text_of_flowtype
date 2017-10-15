@@ -4,5 +4,5 @@ S flow/src/parser/**
 B _build/**
 B flow/_build/src/parser/**
 
-PKG ounit core yojson
+PKG ounit core yojson cmdliner
 

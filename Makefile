@@ -79,6 +79,7 @@ install: init git-submodule
 		core \
 		yojson \
 		ppx_deriving \
+		cmdliner \
 		sedlex \
 		ounit
 

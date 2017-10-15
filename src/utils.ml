@@ -24,3 +24,8 @@ let succ x =
   let n = Char.to_int x in
   let next = Char.of_int (n + 1) in
   Option.value_exn next
+
+let is_valid_path file =
+  match (Sys.file_exists file, Sys.is_file file, Filename.split_extension file) with
+  | (`Yes, `Yes, (_, Some "js")) -> true
+  | _ -> false
