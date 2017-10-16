@@ -1,8 +1,8 @@
-FROM ocaml/opam:alpine-3.6_ocaml-4.03.0
+FROM ocaml/opam
 
 ADD . ~/hoogle_text_of_flowtype
 WORKDIR ~/hoogle_text_of_flowtype
 
-RUN make install && \
+RUN sudo make install && \
   ocamlfind query ounit && \
   make test

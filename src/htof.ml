@@ -5,6 +5,20 @@ open Parser_flow
 open Translate
 open Cmdliner
 
+type t = {
+  (* flow-typed/definitions/npm/tape_v4.5.x/flow_v0.25.x-/tape_v4.5.x.js *)
+  path: string; 
+
+  (* name of module tape *)
+  name: string;
+
+  (* version of module like v4.5.x *)
+  version: string;
+}
+
+let gather_modules root_dir = 
+  []
+
 let parse filepath = filepath
                      |> Utils.open_file
                      |> (fun (content, source) -> program_file content source)
@@ -12,7 +26,14 @@ let parse filepath = filepath
                      |> String.concat ~sep:""
                      |> String.chop_suffix_exn ~suffix:"\n"
 
-(* TODO: No need to command line interface... *)
+let run () =
+  let dirs = "flow-typed/definitions/npm/tape_v4.5.x"
+             |> Sys.readdir
+             |> Array.to_list in
+  List.iter ~f:print_endline dirs;
+  ()
+
+(* TODO: No need to command line interface...
 module Cmd : sig
   val name: string
   val run: string -> bool -> unit
@@ -41,3 +62,4 @@ end = struct
 
   let term = Term.(const run $ source $ dry_run)
 end
+ *)
