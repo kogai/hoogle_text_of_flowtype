@@ -12,8 +12,7 @@ let parse filepath = filepath
                      |> String.concat ~sep:""
                      |> String.chop_suffix_exn ~suffix:"\n"
 
-(* TODO: support to convert directory *)
-
+(* TODO: No need to command line interface... *)
 module Cmd : sig
   val name: string
   val run: string -> bool -> unit

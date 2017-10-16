@@ -30,25 +30,7 @@ let type_of_type_var base =
     )
   |> Utils.join ~sep:" "
 
-let rec translate ?(root="") (loc, statements, comments) =
-  statements
-  |> List.map ~f:translate_statement
-  |> List.fold ~init: [] ~f: (fun acc x -> match (acc, x) with
-      | acc, Some (loc, dec) ->
-        let comments = relative_comment loc comments in
-        let url = match Loc.source loc with
-          | Some source ->
-            let { Loc.start } = loc in
-            let { Loc.line } = start in
-            "@url " ^ (File_key.to_string source) ^ "#L" ^ string_of_int line
-          | None -> ""
-        in
-        (String.concat ~sep:"\n" (comments @ [url] @ [dec])) :: acc
-      | acc, None -> acc
-    )
-  |> List.map ~f:(fun d -> d ^ "\n")
-
-and relative_comment { Loc.start } comments
+let relative_comment { Loc.start } comments
   = comments
     |> List.fold
       ~init:[]
@@ -72,7 +54,7 @@ type t =
 
 let return (loc, dec) = FunctionDeclare (loc, dec)
 
-let rec declarations ?(root="") (_, statements, comments) =
+let rec translate ?(root="") (_, statements, comments) =
   statements
   |> List.map ~f:(translate_statement ~root ~comments)
   |> List.fold ~init: [] ~f: (fun acc x -> match (acc, x) with
@@ -124,7 +106,7 @@ and translate_statement ~root ~comments = Statement.(function
         | DeclareModule.Literal (_, { Literal.value = Literal.String id; }) -> id
         | _ -> Utils.unreachable ~message:"Module name should express as string";
       in
-      let declares = declarations ~root (loc, List.rev xs, comments) in
+      let declares = translate ~root (loc, List.rev xs, comments) in
       let module_name = "-- |\n" ^ "module " ^ id ^ "\n" in
       ModuleDeclare (loc, String.concat ~sep:"\n" @@ module_name::declares)
     | _, DeclareModuleExports _
