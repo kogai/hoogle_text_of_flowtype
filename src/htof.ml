@@ -6,17 +6,24 @@ open Translate
 open Cmdliner
 
 type t = {
-  (* flow-typed/definitions/npm/tape_v4.5.x/flow_v0.25.x-/tape_v4.5.x.js *)
   path: string; 
-
-  (* name of module tape *)
   name: string;
-
-  (* version of module like v4.5.x *)
   version: string;
 }
 
+let rec read_dir = function
+  | ".DS_Store" -> []
+  | dir when Sys.is_directory dir -> read_dir dir
+  | file -> file::[]
+
 let gather_modules root_dir = 
+  (* val fold_dir : init:'acc -> f:('acc -> string -> 'acc) -> string -> 'acc *)
+  (* let dirs = Sys.fold_dir ~init:[] ~f:(fun acc dir -> match dir with
+      | ".DS_Store" ->
+      | dir when Sys.is_directory dir -> dir
+      | file -> file
+     ) root_dir in
+     List.iter dirs print_endline; *)
   []
 
 let parse filepath = filepath

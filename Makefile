@@ -85,7 +85,6 @@ install: init git-submodule
 
 .PHONY: setup
 setup: install git-submodule
-	opam install setup
 	opam user-setup install
 
 .PHONY: clean
