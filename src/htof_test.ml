@@ -12,11 +12,29 @@ let specs = [
     );
 
   "be able to gather modules" >:: (fun ctx ->
-      let actual = root ^ "/flow-typed"
-                   |> gather_modules
-                   |> List.hd_exn in
-      assert_equal actual.path "fixture/htof/flow-typed/definitions/npm/tape_v4.5.x/flow_v0.25.x-/tape_v4.5.x.js";
-      assert_equal actual.name "tape";
-      assert_equal actual.version "v4.5.x";
+      root
+      |> gather_modules
+      |> List.zip [{
+          path = root ^ "definitions/npm/module_a_v1.10.x/flow_v0.25.x-/module_a_v1.10.x.js";
+          name = "module_a";
+          version ="v1.10.x";
+        }; {
+           path = root ^ "definitions/npm/module_b_v2.0/flow_v0.33.x-/module_b_v2.0.js";
+           name = "module_b";
+           version ="v2.0";
+         }; {
+           path = root ^ "definitions/npm/module_c_v3.x.x/flow_v0.25.x-/module_c_v3.x.x.js";
+           name = "module_c";
+           version ="v3.x.x";
+         }
+        ]
+      |> (function
+          | Some x -> x
+          | None -> assert_failure "Number of elements hadn't matched")
+      |> List.iter ~f:(fun ({ path; name; version; }, expect) ->
+          assert_equal path expect.path;
+          assert_equal name expect.name;
+          assert_equal version expect.version;
+        )
     )
 ]
