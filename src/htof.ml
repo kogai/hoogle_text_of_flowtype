@@ -11,10 +11,11 @@ type t = {
   version: string;
 }
 
-let rec read_dir = function
-  | ".DS_Store" -> []
-  | dir when Sys.is_directory dir -> read_dir dir
-  | file -> file::[]
+(* let rec read_dir dirs = function
+   (* | ".DS_Store" -> []
+     | dir when Sys.is_directory dir -> read_dir dir
+     | file -> file::[] *)
+   | file -> file::[] *)
 
 let gather_modules root_dir = 
   (* val fold_dir : init:'acc -> f:('acc -> string -> 'acc) -> string -> 'acc *)
