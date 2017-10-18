@@ -34,22 +34,22 @@ let run () =
   ()
 
 (* TODO: No need to command line interface...
-module Cmd : sig
-  val name: string
-  val run: string -> bool -> unit
-  val term: unit Cmdliner.Term.t
-end = struct
-  let name = "hoogle_text_of_flowtype"
+   module Cmd : sig
+   val name: string
+   val run: string -> bool -> unit
+   val term: unit Cmdliner.Term.t
+   end = struct
+   let name = "hoogle_text_of_flowtype"
 
-  let source =
+   let source =
     let doc = "Declaration file of Flow to convert" in
     Arg.(value & pos 0 string "" & info [] ~docv:"Source" ~doc)
 
-  let dry_run =
+   let dry_run =
     let doc = "Output to stdout instead of writting to file" in
     Arg.(value & flag & info ["d"; "dry-run"] ~docv:"Dry-run" ~doc)
 
-  let run file dry_run =
+   let run file dry_run =
     match Utils.is_valid_path file with
     | true ->
       print_endline (Printf.sprintf "Converting %s..." file);
@@ -60,6 +60,6 @@ end = struct
     | false ->
       Utils.unreachable ~message:(Printf.sprintf "Invalid path [%s]" file)
 
-  let term = Term.(const run $ source $ dry_run)
-end
- *)
+   let term = Term.(const run $ source $ dry_run)
+   end
+*)
