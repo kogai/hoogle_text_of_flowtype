@@ -1,5 +1,3 @@
-(* HTOF stands for Hoogle text of flow *)
-
 open Core
 open Parser_flow
 open Translate
@@ -11,21 +9,26 @@ type t = {
   version: string;
 }
 
-(* let rec read_dir dirs = function
-   (* | ".DS_Store" -> []
-     | dir when Sys.is_directory dir -> read_dir dir
-     | file -> file::[] *)
-   | file -> file::[] *)
+let rec gather_directories dir =
+  match Sys.is_directory dir with
+  | `Yes ->
+    dir::(dir
+          |> Sys.ls_dir
+          |> List.map ~f:(fun d -> gather_directories @@ dir ^ "/" ^ d)
+          |> List.concat)
+  | _ -> []
 
-let gather_modules root_dir = 
-  (* val fold_dir : init:'acc -> f:('acc -> string -> 'acc) -> string -> 'acc *)
-  (* let dirs = Sys.fold_dir ~init:[] ~f:(fun acc dir -> match dir with
-      | ".DS_Store" ->
-      | dir when Sys.is_directory dir -> dir
-      | file -> file
-     ) root_dir in
-     List.iter dirs print_endline; *)
-  []
+let gather_modules root_dir =
+  root_dir
+  |> gather_directories
+  |> List.filter ~f:(fun d -> Str.string_match (Str.regexp ".*_v[0-9.x]+$") d 0)
+  |> List.map ~f:(fun d ->
+      print_endline d;
+      {
+        path = d;
+        name = d;
+        version = d;
+      })
 
 let parse filepath = filepath
                      |> Utils.open_file
@@ -40,34 +43,3 @@ let run () =
              |> Array.to_list in
   List.iter ~f:print_endline dirs;
   ()
-
-(* TODO: No need to command line interface...
-   module Cmd : sig
-   val name: string
-   val run: string -> bool -> unit
-   val term: unit Cmdliner.Term.t
-   end = struct
-   let name = "hoogle_text_of_flowtype"
-
-   let source =
-    let doc = "Declaration file of Flow to convert" in
-    Arg.(value & pos 0 string "" & info [] ~docv:"Source" ~doc)
-
-   let dry_run =
-    let doc = "Output to stdout instead of writting to file" in
-    Arg.(value & flag & info ["d"; "dry-run"] ~docv:"Dry-run" ~doc)
-
-   let run file dry_run =
-    match Utils.is_valid_path file with
-    | true ->
-      print_endline (Printf.sprintf "Converting %s..." file);
-      let result = parse file in
-      if dry_run
-      then print_endline result
-      else print_endline result
-    | false ->
-      Utils.unreachable ~message:(Printf.sprintf "Invalid path [%s]" file)
-
-   let term = Term.(const run $ source $ dry_run)
-   end
-*)

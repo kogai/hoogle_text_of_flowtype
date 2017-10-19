@@ -9,10 +9,8 @@ LFLAGS := "-I $(PARSER_DIR) $(PARSER_NAME)"
 SRC_DIRS := "src flow/src/parser flow/src/third-party/wtf8"
 SRC_FILES := $(shell find ./src -type f -name '*.ml')
 
-OCB_FLAGS := -use-ocamlfind -use-menhir -Is $(SRC_DIRS) -pkgs $(PKGS)
+OCB_FLAGS := -use-ocamlfind -use-menhir -Is $(SRC_DIRS) -pkgs $(PKGS) -lib str
 OCB := ocamlbuild $(OCB_FLAGS)
-MODULES = $(wildcard $(abspath ./)/flow/_build/src/**/*.cmx)
-OBJECTS = $(patsubst %.ml,%.cmxa,$(MODULES))
 OPAM_VER := 4.03.0
 
 all:$(NAME).native $(NAME).byte
@@ -50,11 +48,11 @@ test: test-native test-byte
 
 .PHONY: test-native
 test-native: $(TEST_NAME).native
-	./$(TEST_NAME).native
+	@./$(TEST_NAME).native
 
 .PHONY: test-byte
 test-byte: $(TEST_NAME).byte
-	./$(TEST_NAME).byte
+	@./$(TEST_NAME).byte
 
 .PHONY: test-ci
 test-ci: install
